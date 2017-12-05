@@ -6,10 +6,10 @@
 	<groupId>org.home</groupId>
 	<artifactId>spring-microservices-in-action</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<name>spring-microservices-in-action</name>
-	<description>spring-microservices-in-action </description>
+	<description>spring-microservices-in-action</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -36,6 +36,10 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<modules>
+		<module>configurationserver</module>
+		<module>licensing-service</module>
+	</modules>
 
 	<build>
 		<plugins>
