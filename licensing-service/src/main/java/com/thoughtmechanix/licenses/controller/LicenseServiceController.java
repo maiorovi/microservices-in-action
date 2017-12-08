@@ -6,6 +6,8 @@ import com.thoughtmechanix.licenses.services.LicenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public class LicenseServiceController {
     @Autowired
     private ServiceConfig serviceConfig;
 
-    @RequestMapping(value="/",method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public List<License> getLicenses(@PathVariable("organizationId") String organizationId) {
 
         return licenseService.getLicensesByOrg(organizationId);
@@ -37,7 +39,7 @@ public class LicenseServiceController {
         return String.format("This is the put");
     }
 
-    @RequestMapping(value="/",method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, consumes = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public void saveLicenses(@RequestBody License license) {
         licenseService.saveLicense(license);
     }

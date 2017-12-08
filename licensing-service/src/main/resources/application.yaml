@@ -1,0 +1,10 @@
+security :
+    user:
+      name: user
+      password: d4be46ce-ab1f-43ea-ba78-0ba16b49051c
+
+logging:
+  level:
+    org:
+      springframework:
+        web : DEBUG
