@@ -1,5 +1,9 @@
 version: '2'
 services:
+  eurekasvr:
+    image: johncarnell/tmx-eurekasvr:chapter4
+    ports:
+    - "8761:8761"
   configserver:
     image: johncarnell/tmx-confsvr:chapter3
     ports:

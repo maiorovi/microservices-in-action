@@ -39,6 +39,7 @@
 	<modules>
 		<module>configurationserver</module>
 		<module>licensing-service</module>
+		<module>eurekasvr</module>
 	</modules>
 
 	<build>
