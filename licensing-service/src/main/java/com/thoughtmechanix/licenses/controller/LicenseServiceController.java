@@ -3,6 +3,8 @@ package com.thoughtmechanix.licenses.controller;
 import com.thoughtmechanix.licenses.config.ServiceConfig;
 import com.thoughtmechanix.licenses.model.License;
 import com.thoughtmechanix.licenses.services.LicenseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "v1/organizations/{organizationId}/licenses")
 public class LicenseServiceController {
+    private static final Logger log = LoggerFactory.getLogger(LicenseServiceController.class);
     @Autowired
     private LicenseService licenseService;
 
@@ -23,15 +26,15 @@ public class LicenseServiceController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<License> getLicenses(@PathVariable("organizationId") String organizationId) {
-
+        log.info("Hello world!");
         return licenseService.getLicensesByOrg(organizationId);
     }
 
     @RequestMapping(value="/{licenseId}",method = RequestMethod.GET)
     public License getLicenses( @PathVariable("organizationId") String organizationId,
                                 @PathVariable("licenseId") String licenseId) {
-
-        return licenseService.getLicense(organizationId,licenseId);
+        log.info("getLicenses by id");
+        return licenseService.getLicense(organizationId,licenseId, "rest");
     }
 
     @RequestMapping(value="{licenseId}",method = RequestMethod.PUT)

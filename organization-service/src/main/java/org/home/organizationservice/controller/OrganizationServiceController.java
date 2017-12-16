@@ -2,11 +2,13 @@ package org.home.organizationservice.controller;
 
 import org.home.organizationservice.model.Organization;
 import org.home.organizationservice.service.OrganizationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping( value = "v1/ogranizations")
 public class OrganizationServiceController {
+    @Autowired
     private OrganizationService organizationService;
 
     @RequestMapping(value = "/{organizationId}", method = RequestMethod.GET)

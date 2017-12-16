@@ -6,11 +6,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ogranizations")
+@Table(name = "organizations")
 public class Organization {
 
     @Id
-    @Column(name="ogranization_id", nullable = false)
+    @Column(name="organization_id", nullable = false)
     private String id;
 
     @Column(name="name", nullable = false)
@@ -22,7 +22,7 @@ public class Organization {
     @Column(name="contact_email", nullable = false)
     private String contactEmail;
 
-    @Column(name="contat_phone", nullable = false)
+    @Column(name="contact_phone", nullable = false)
     private String contactPhone;
 
     public String getId() {

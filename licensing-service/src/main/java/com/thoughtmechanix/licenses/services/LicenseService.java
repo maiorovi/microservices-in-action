@@ -7,6 +7,8 @@ import com.thoughtmechanix.licenses.config.ServiceConfig;
 import com.thoughtmechanix.licenses.model.License;
 import com.thoughtmechanix.licenses.model.Organization;
 import com.thoughtmechanix.licenses.repository.LicenseRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.util.UUID;
 
 @Service
 public class LicenseService {
+    private static final Logger log = LoggerFactory.getLogger(LicenseService.class);
 
     @Autowired
     private LicenseRepository licenseRepository;
@@ -40,7 +43,7 @@ public class LicenseService {
         License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
 
         Organization org = retrieveOrgInfo(organizationId, clientType);
-
+        log.info("Found organization with paramters {}", org);
         return license
                 .withOrganizationName( org.getName())
                 .withContactName( org.getContactName())
@@ -51,6 +54,7 @@ public class LicenseService {
 
     private Organization retrieveOrgInfo(String organizationId, String clientType){
         Organization organization = null;
+        log.info("Looking up organization with id {} and clientType {}", organizationId, clientType);
 
         switch (clientType) {
             case "feign":

@@ -2,13 +2,14 @@ package org.home.organizationservice.service;
 
 import org.home.organizationservice.model.Organization;
 import org.home.organizationservice.repository.OrganizationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class OrganizationService {
-
+    @Autowired
     private OrganizationRepository organizationRepository;
 
     public Organization getOrg(String organizationId) {
