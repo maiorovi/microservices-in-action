@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping( value = "v1/ogranizations")
+@RequestMapping( value = "v1/organizations")
 public class OrganizationServiceController {
     @Autowired
     private OrganizationService organizationService;
