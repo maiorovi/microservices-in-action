@@ -12,6 +12,7 @@ import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -30,15 +31,16 @@ public class LicenseServiceController {
         return licenseService.getLicensesByOrg(organizationId);
     }
 
-    @RequestMapping(value="/{licenseId}",method = RequestMethod.GET)
-    public License getLicenses( @PathVariable("organizationId") String organizationId,
-                                @PathVariable("licenseId") String licenseId) {
+    @RequestMapping(value = "/{licenseId}", method = RequestMethod.GET)
+    public License getLicenses(@PathVariable("organizationId") String organizationId,
+                               @PathVariable("licenseId") String licenseId,
+                               @RequestParam("queryType") String type) {
         log.info("getLicenses by id");
-        return licenseService.getLicense(organizationId,licenseId, "rest");
+        return licenseService.getLicense(organizationId, licenseId, type);
     }
 
-    @RequestMapping(value="{licenseId}",method = RequestMethod.PUT)
-    public String updateLicenses( @PathVariable("licenseId") String licenseId) {
+    @RequestMapping(value = "{licenseId}", method = RequestMethod.PUT)
+    public String updateLicenses(@PathVariable("licenseId") String licenseId) {
         return String.format("This is the put");
     }
 
@@ -47,13 +49,13 @@ public class LicenseServiceController {
         licenseService.saveLicense(license);
     }
 
-    @RequestMapping(value="{licenseId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "{licenseId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String deleteLicenses( @PathVariable("licenseId") String licenseId) {
+    public String deleteLicenses(@PathVariable("licenseId") String licenseId) {
         return String.format("This is the Delete");
     }
 
-    @RequestMapping(value = "/{licenseId}/{clientType}", method=RequestMethod.GET)
+    @RequestMapping(value = "/{licenseId}/{clientType}", method = RequestMethod.GET)
     public License getLicensesWithClient(
             @PathVariable("organizationId") String organizationId,
             @PathVariable("licenseId") String licenseId,
