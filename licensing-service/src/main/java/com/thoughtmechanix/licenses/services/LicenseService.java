@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class LicenseService {
@@ -33,26 +34,20 @@ public class LicenseService {
     @Autowired
     OrganizationDiscoveryClient organizationDiscoveryClient;
 
-
-    public License getLicense(String organizationId, String licenseId) {
-        License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
-        return license.withComment(config.getExampleProperty());
-    }
-
     public License getLicense(String organizationId, String licenseId, String clientType) {
         License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
 
         Organization org = retrieveOrgInfo(organizationId, clientType);
         log.info("Found organization with paramters {}", org);
         return license
-                .withOrganizationName( org.getName())
-                .withContactName( org.getContactName())
-                .withContactEmail( org.getContactEmail() )
-                .withContactPhone( org.getContactPhone() )
+                .withOrganizationName(org.getName())
+                .withContactName(org.getContactName())
+                .withContactEmail(org.getContactEmail())
+                .withContactPhone(org.getContactPhone())
                 .withComment(config.getExampleProperty());
     }
 
-    private Organization retrieveOrgInfo(String organizationId, String clientType){
+    private Organization retrieveOrgInfo(String organizationId, String clientType) {
         Organization organization = null;
         log.info("Looking up organization with id {} and clientType {}", organizationId, clientType);
 
@@ -77,7 +72,17 @@ public class LicenseService {
     }
 
     public List<License> getLicensesByOrg(String organizationId) {
-        return licenseRepository.findByOrganizationId(organizationId);
+        List<License> licenses = licenseRepository.findByOrganizationId(organizationId);
+        final Organization org = retrieveOrgInfo(organizationId, "feign");
+
+        return licenses.stream().map(
+                license -> license
+                        .withOrganizationId(org.getId())
+                        .withOrganizationName(org.getName())
+                        .withContactName(org.getContactName())
+                        .withContactEmail(org.getContactEmail())
+                        .withContactPhone(org.getContactPhone())
+                        .withComment(config.getExampleProperty())).collect(Collectors.toList());
     }
 
     public void saveLicense(License license) {
