@@ -1,5 +1,7 @@
 package com.thoughtmechanix.licenses.services;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.thoughtmechanix.licenses.clients.OrganizationDiscoveryClient;
 import com.thoughtmechanix.licenses.clients.OrganizationFeignClient;
 import com.thoughtmechanix.licenses.clients.OrganizationRestTemplateClient;
@@ -12,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -71,7 +75,21 @@ public class LicenseService {
         return organization;
     }
 
+    @HystrixCommand(
+            commandProperties = {
+                    @HystrixProperty(
+                            name = "execution.isolation.thread.timeoutInMilliseconds",
+                            value = "1000"
+                            )},
+            fallbackMethod = "buildFallbackLicenseList",
+            threadPoolKey = "licensesByOrgThreadPool",
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value="30"),
+                    @HystrixProperty(name = "maxQueueSize", value="10")
+            }
+    )
     public List<License> getLicensesByOrg(String organizationId) {
+        randomlyRunLong();
         List<License> licenses = licenseRepository.findByOrganizationId(organizationId);
         final Organization org = retrieveOrgInfo(organizationId, "feign");
 
@@ -83,6 +101,32 @@ public class LicenseService {
                         .withContactEmail(org.getContactEmail())
                         .withContactPhone(org.getContactPhone())
                         .withComment(config.getExampleProperty())).collect(Collectors.toList());
+    }
+
+    private void randomlyRunLong() {
+        Random rand = new Random();
+        int randomInt = rand.nextInt((3-1) + 1) + 1;
+        if (randomInt == 3) sleep();
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<License> buildFallbackLicenseList(String organizationId) {
+        List<License> fallbackList = new ArrayList<>();
+
+        License lincense = new License()
+                .withId("0000000000-00-0000")
+                .withOrganizationId(organizationId)
+                .withProductName("sorry no licensing information currently available");
+        fallbackList.add(lincense);
+
+        return fallbackList;
     }
 
     public void saveLicense(License license) {
